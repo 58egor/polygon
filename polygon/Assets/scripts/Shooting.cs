@@ -5,15 +5,26 @@ using UnityEngine.UI;
 
 public class Shooting : MonoBehaviour
 {
+    [Header("Основные параметры")]
     public GameObject gunpoit;
     public int speed;
     public int damage;
     public int targets;
     public float Timeout;
     private float curTimeout;
+    [Header("Параметр для луча")]
     public float Distance;
+    [Header("Создаваемы объекты при стрельбе объектом")]
+    public Transform GunRay;
+    public Rigidbody Bullet;
+    [Header("Параметры для разборса при самом выстреле")]
+    public bool ActiveRazbros;
+    public float razbros;
+    public int bullets;
+    [Header("Параметры для разброса при долгом зажатии")]
     [Header("Тип стрельбы")]
     public bool Ray;
+    public bool RayBullet;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +44,10 @@ public class Shooting : MonoBehaviour
                 if (Ray)
                 {
                     RayShoot();
+                }
+                if (RayBullet)
+                {
+                    RayBul();
                 }
 
             }
@@ -78,5 +93,35 @@ public class Shooting : MonoBehaviour
                 }
             }
         }
+    }
+    //симуляция стрельбы объектом с лучом
+    void RayBul()
+    {
+        CreateBullet(transform.parent.rotation);
+        if (ActiveRazbros)
+        {
+            for(int i = 0; i < bullets;i++)
+            {
+                Vector3 rot = transform.parent.rotation.eulerAngles;
+                rot.y += razbros * (i + 1);
+                CreateBullet(Quaternion.Euler(rot));
+            }
+            for (int i = 0; i < bullets; i++)
+            {
+                Vector3 rot = transform.parent.rotation.eulerAngles;
+                rot.y -= razbros * (i + 1);
+                CreateBullet(Quaternion.Euler(rot));
+            }
+        }
+    }
+    void CreateBullet(Quaternion rot)
+    {
+        Transform obj;
+        obj = Instantiate(GunRay, gunpoit.transform.position, rot);
+        obj.GetComponent<Shoot>().damage = damage;
+        obj.GetComponent<Shoot>().speed = speed;
+        obj.GetComponent<Shoot>().targets = targets;
+        obj.GetComponent<Shoot>().Bullet = Bullet;
+        obj.GetComponent<Shoot>().ready = true;
     }
 }

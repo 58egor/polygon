@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
         HP -= damage;
         if (HP < 0)
         {
-            Destroy(this.transform);
+            Destroy(transform.gameObject);
         }
     }
     // Update is called once per frame

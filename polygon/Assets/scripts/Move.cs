@@ -7,12 +7,7 @@ public class Move : MonoBehaviour
     public float speedMove = 1.5f;
     Transform player;
     Rigidbody body;
-    public float sensitivity = 5f; // чувствительность мыши
     Vector3 movement;
-    public float DashTime = 0.5f;
-    float CurrentDashTime = 0;
-    public float DashSpeed = 5;
-    bool DashActive = false;
     public float smooth = 3;
     public bool useSmooth;
     // Start is called before the first frame update
