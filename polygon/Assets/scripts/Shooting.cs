@@ -11,6 +11,7 @@ public class Shooting : MonoBehaviour
     public int damage;
     public int targets;
     public float Timeout;
+    //public float
     private float curTimeout;
     [Header("Параметр для луча")]
     public float Distance;
@@ -22,25 +23,71 @@ public class Shooting : MonoBehaviour
     public float razbros;
     public int bullets;
     [Header("Параметры для разброса при долгом зажатии")]
+    public bool BulletRazbros;
+    float degre=0;
+    public float MaxDegre;
+    public float AddDegre = 1;
+    public int NumberOfShoots;
+    int ShootActive;
+    int ShootNotActive;
+    private float ShootTimeout;
+    [Header("N-выстрел")]
+    private bool TripleShoot=false;
+    public bool TripleShootActive;
+    public int Nshoots;
+    private int Shoots = 0;
+    public float TimeBetweenShoots;
+    private float TimeBetween=0;
     [Header("Тип стрельбы")]
     public bool Ray;
     public bool RayBullet;
     // Start is called before the first frame update
     void Start()
     {
-
+        ShootActive = ShootNotActive = NumberOfShoots;
     }
 
     // Update is called once per frame
     void Update()
     {
         Debug.DrawRay(gunpoit.transform.position, gunpoit.transform.forward * Distance, Color.green);
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) || TripleShoot)
         {
-            curTimeout += Time.deltaTime;
-            if (curTimeout > Timeout)
+            if (TripleShootActive && TripleShoot)
+            {
+                TimeBetween += Time.deltaTime;
+                curTimeout = 0;
+            }
+            if (!TripleShoot)
+            {
+                curTimeout += Time.deltaTime;
+            }
+            if (curTimeout > Timeout || TimeBetween> TimeBetweenShoots)
             {
                 curTimeout = 0;
+                TimeBetween = 0;
+                if (TripleShootActive)
+                {
+                    if (TripleShoot)
+                    {
+                        if (Shoots < Nshoots-1)
+                        {
+                            Shoots++;
+                        }
+                        else
+                        {
+                            TripleShoot = false;
+                            TimeBetween = 0;
+                            Shoots=0;
+
+                        }
+                    }
+                    else
+                    {
+                        TripleShoot = true;
+                        Shoots++;
+                    }
+                }
                 if (Ray)
                 {
                     RayShoot();
@@ -49,12 +96,50 @@ public class Shooting : MonoBehaviour
                 {
                     RayBul();
                 }
-
+                if (BulletRazbros)
+                {
+                    ShootActive--;
+                    ShootNotActive = NumberOfShoots;
+                    if (ShootActive == 0)
+                    {
+                        if (degre < MaxDegre)
+                        {
+                            degre += AddDegre;
+                        }
+                        else
+                        {
+                            degre = MaxDegre;
+                        }
+                        ShootActive = NumberOfShoots;
+                    }
+                }
             }
         }
         else
         {
-            curTimeout = Timeout + 1;
+            if(!TripleShoot)
+            curTimeout += Time.deltaTime;
+            if (BulletRazbros)
+            {
+                ShootTimeout += Time.deltaTime;
+                if (ShootTimeout > Timeout)
+                {
+                    ShootNotActive--;
+                    ShootActive = NumberOfShoots;
+                    if (ShootNotActive == 0)
+                    {
+                        if (degre > 0)
+                        {
+                            degre -= AddDegre;
+                        }
+                        else
+                        {
+                            degre = 0;
+                        }
+                        ShootNotActive = NumberOfShoots;
+                    }
+                }
+            }
         }
     }
     //функция отвечающая за стрельбу лучом
@@ -97,19 +182,21 @@ public class Shooting : MonoBehaviour
     //симуляция стрельбы объектом с лучом
     void RayBul()
     {
-        CreateBullet(transform.parent.rotation);
+        Vector3 rot = transform.parent.rotation.eulerAngles;
+        rot.y += Random.Range(-degre, degre);
+        CreateBullet(Quaternion.Euler(rot));
         if (ActiveRazbros)
         {
             for(int i = 0; i < bullets;i++)
             {
-                Vector3 rot = transform.parent.rotation.eulerAngles;
-                rot.y += razbros * (i + 1);
+                rot = transform.parent.rotation.eulerAngles;
+                rot.y += razbros * (i + 1)+ Random.Range(-degre, degre);
                 CreateBullet(Quaternion.Euler(rot));
             }
             for (int i = 0; i < bullets; i++)
             {
-                Vector3 rot = transform.parent.rotation.eulerAngles;
-                rot.y -= razbros * (i + 1);
+                rot = transform.parent.rotation.eulerAngles;
+                rot.y -= razbros * (i + 1)+ Random.Range(-degre, degre);
                 CreateBullet(Quaternion.Euler(rot));
             }
         }

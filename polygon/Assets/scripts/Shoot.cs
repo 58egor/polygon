@@ -61,14 +61,21 @@ public class Shoot : MonoBehaviour
             distance = hit[i].distance;
         }
         time += Time.deltaTime;
+        if (hit[i].collider.gameObject.layer == 9)
+        {
+            Debug.Log(hit[i].collider.name);
+            hits.Add(hit[i].collider);
+        }
         if (distance < time * speed && time * speed < distance + (speed / 20))
         {
+
             if (hit[i].collider.gameObject.layer == 8)
             {
                 hit[i].collider.GetComponent<Enemy>().Damage(damage);
                 hits.Add(hit[i].collider);
             }
-            if(hit[i].collider.gameObject.layer == 0 || hits.Count >= targets)
+           
+            if (hit[i].collider.gameObject.layer == 0 || hits.Count >= targets)
             {
                 Debug.Log(hit[i].collider.name);
                 Destroy(CreateBullet.gameObject);
@@ -82,8 +89,6 @@ public class Shoot : MonoBehaviour
         {
             if (FristStart)
             {
-                Debug.Log("Урон:" + damage);
-                Debug.Log("Цели:" + targets);
                 CreateBullet = Instantiate(Bullet, transform.position, Quaternion.identity) as Rigidbody;//создаем префаб пули на сцене
                 CreateBullet.velocity = transform.forward * speed;//заставляем пулю лететь
                 FristStart = false;
