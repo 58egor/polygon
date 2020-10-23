@@ -371,7 +371,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &905621601
 MonoBehaviour:
@@ -594,7 +594,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &1130744880
 MonoBehaviour:
@@ -792,16 +792,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gunpoit: {fileID: 90088794}
-  speed: 15
+  speed: 20
   damage: 1
   targets: 2
   Timeout: 0.2
+  MaxOboima: 10
+  Oboima: 0
+  TimeOfReload: 1
+  AddPatron: 2
+  Reload: 0
   Distance: 10
   GunRay: {fileID: 7927569280056660293, guid: b7e807c26b3bff74ba99d10ac3082ef2, type: 3}
   Bullet: {fileID: 5572951522769017656, guid: 2e412142ac684454186fb209a55103de, type: 3}
   ActiveRazbros: 0
-  razbros: 0
-  bullets: 0
+  razbros: 5
+  bullets: 1
+  BulletRazbros: 0
+  MaxDegre: 10
+  AddDegre: 1
+  NumberOfShoots: 3
+  TripleShootActive: 0
+  Nshoots: 3
+  TimeBetweenShoots: 0.1
   Ray: 0
   RayBullet: 1
 --- !u!1 &1347360324
@@ -839,7 +851,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &1347360326
 MonoBehaviour:
@@ -1333,7 +1345,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1070aa2fd044e942b0c9d616e6359f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedMove: 4
+  speedMove: 6
   smooth: 3
   useSmooth: 0
 --- !u!1 &2001517485

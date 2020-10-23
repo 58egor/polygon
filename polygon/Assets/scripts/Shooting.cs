@@ -11,7 +11,12 @@ public class Shooting : MonoBehaviour
     public int damage;
     public int targets;
     public float Timeout;
-    //public float
+    public int MaxOboima;
+    public int Oboima;
+    public float TimeOfReload;
+    private float ReloadTime;
+    public int AddPatron;
+    public bool Reload = false;
     private float curTimeout;
     [Header("Параметр для луча")]
     public float Distance;
@@ -45,13 +50,24 @@ public class Shooting : MonoBehaviour
     void Start()
     {
         ShootActive = ShootNotActive = NumberOfShoots;
+        Oboima = MaxOboima;
+        ReloadTime = TimeOfReload;
     }
-
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
+    {
+        if (Input.GetKey(KeyCode.R))
+        {
+            if(Oboima<MaxOboima && !Reload)
+            {
+                Reload = true;
+            }
+        }
+    }
+        // Update is called once per frame
+        void Update()
     {
         Debug.DrawRay(gunpoit.transform.position, gunpoit.transform.forward * Distance, Color.green);
-        if (Input.GetMouseButton(0) || TripleShoot)
+        if ((Input.GetMouseButton(0) || TripleShoot))
         {
             if (TripleShootActive && TripleShoot)
             {
@@ -62,8 +78,13 @@ public class Shooting : MonoBehaviour
             {
                 curTimeout += Time.deltaTime;
             }
-            if (curTimeout > Timeout || TimeBetween> TimeBetweenShoots)
+            if (Oboima > 0)
             {
+                Reload = false;
+            }
+            if ((curTimeout > Timeout || TimeBetween> TimeBetweenShoots) && !Reload)
+            {
+                Oboima--;
                 curTimeout = 0;
                 TimeBetween = 0;
                 if (TripleShootActive)
@@ -139,6 +160,30 @@ public class Shooting : MonoBehaviour
                         ShootNotActive = NumberOfShoots;
                     }
                 }
+            }
+        }
+        if (Oboima == 0 || Reload)
+        {
+            Reload = true;
+            Rel();  
+        }
+    }
+    void Rel()
+    {
+        ReloadTime -= Time.deltaTime;
+        if (ReloadTime < 0)
+        {
+            Oboima += AddPatron;
+            ReloadTime = TimeOfReload;
+            if (Oboima >= MaxOboima)
+            {
+                if (Oboima > MaxOboima)
+                {
+                    
+                    Oboima -= (Oboima - MaxOboima);
+                }
+                Reload = false;
+                
             }
         }
     }
