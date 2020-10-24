@@ -18,6 +18,7 @@ public class Shooting : MonoBehaviour
     public int AddPatron;
     public bool Reload = false;
     private float curTimeout;
+    public bool FireAfterReload = false;
     [Header("Параметр для луча")]
     public float Distance;
     [Header("Создаваемы объекты при стрельбе объектом")]
@@ -46,9 +47,13 @@ public class Shooting : MonoBehaviour
     [Header("Тип стрельбы")]
     public bool Ray;
     public bool RayBullet;
+    [Header("Анимация")]
+    private Animator animator;
+
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponentInChildren<Animator>();
         ShootActive = ShootNotActive = NumberOfShoots;
         Oboima = MaxOboima;
         ReloadTime = TimeOfReload;
@@ -78,15 +83,23 @@ public class Shooting : MonoBehaviour
             {
                 curTimeout += Time.deltaTime;
             }
-            if (Oboima > 0)
+            if (Oboima > 0 && FireAfterReload)
             {
                 Reload = false;
             }
             if ((curTimeout > Timeout || TimeBetween> TimeBetweenShoots) && !Reload)
             {
+                if (!animator.GetBool("Fire"))
+                {
+                    animator.SetBool("Fire", true);
+                }
                 Oboima--;
                 curTimeout = 0;
                 TimeBetween = 0;
+                if (Oboima == 0)
+                {
+                        Reload = true;
+                }
                 if (TripleShootActive)
                 {
                     if (TripleShoot)
@@ -138,7 +151,8 @@ public class Shooting : MonoBehaviour
         }
         else
         {
-            if(!TripleShoot)
+            animator.SetBool("Fire", false);
+            if (!TripleShoot)
             curTimeout += Time.deltaTime;
             if (BulletRazbros)
             {
@@ -162,10 +176,15 @@ public class Shooting : MonoBehaviour
                 }
             }
         }
-        if (Oboima == 0 || Reload)
+
+        if ( Reload)
         {
-            Reload = true;
-            Rel();  
+            animator.SetBool("Fire", false);
+            if (!animator.GetBool("Reload")) {
+                animator.SetBool("Reload", true);
+                Debug.Log("Разрешаем перезарядку");
+            }
+           // Rel();  
         }
     }
     void Rel()
@@ -186,6 +205,24 @@ public class Shooting : MonoBehaviour
                 
             }
         }
+    }
+    public void Rel1()
+    {
+        animator.SetBool("Reload", false);
+        Oboima += AddPatron;
+            //ReloadTime = TimeOfReload;
+            if (Oboima >= MaxOboima)
+            {
+                if (Oboima > MaxOboima)
+                {
+
+                    Oboima -= (Oboima - MaxOboima);
+                }
+                Reload = false;
+            
+
+        }
+       
     }
     //функция отвечающая за стрельбу лучом
     void RayShoot()

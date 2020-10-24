@@ -5,7 +5,8 @@ using UnityEngine;
 public class camera : MonoBehaviour
 {
     public Rigidbody body;
-    public int RangeY;
+    public float RangeY;
+    public float RangeZ;
     Transform cam;
     // Start is called before the first frame update
     void Start()
@@ -18,6 +19,11 @@ public class camera : MonoBehaviour
     {
         Vector3 vec= body.position;
         vec.y += RangeY;
+        vec.z += RangeZ;
         cam.position = vec;
+        Quaternion rot = transform.rotation;
+        //rot.y = body.rotation.y;
+        //transform.rotation = rot;
+
     }
 }
