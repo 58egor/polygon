@@ -293,4 +293,14 @@ public class Shooting : MonoBehaviour
         obj.GetComponent<Shoot>().Bullet = Bullet;
         obj.GetComponent<Shoot>().ready = true;
     }
+    void OnDisable()
+    {
+        Reload = false;
+        animator.SetBool("Reload", false);
+        animator.SetBool("Fire", false);
+        animator.Rebind();
+    }
+    private void OnEnable()
+    {
+    }
 }
