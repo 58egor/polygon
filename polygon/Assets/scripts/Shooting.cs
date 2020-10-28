@@ -71,7 +71,7 @@ public class Shooting : MonoBehaviour
         // Update is called once per frame
         void Update()
     {
-        Debug.DrawRay(gunpoit.transform.position, gunpoit.transform.forward * Distance, Color.green);
+        Debug.DrawRay(gunpoit.transform.position, transform.parent.forward * Distance, Color.green);
         if ((Input.GetMouseButton(0) || TripleShoot))
         {
             if (TripleShootActive && TripleShoot)
@@ -302,5 +302,6 @@ public class Shooting : MonoBehaviour
     }
     private void OnEnable()
     {
+        animator.Rebind();
     }
 }

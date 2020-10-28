@@ -11,7 +11,6 @@ public class ChangeWeapon : MonoBehaviour
     {
         Change();
     }
-
     // Update is called once per frame
     void Update()
     {
