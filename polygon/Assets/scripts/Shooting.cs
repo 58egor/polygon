@@ -264,7 +264,10 @@ public class Shooting : MonoBehaviour
     //симуляция стрельбы объектом с лучом
     void RayBul()
     {
-        Vector3 rot = transform.parent.rotation.eulerAngles;
+        Vector3 lookPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.y)) - transform.position;
+        lookPos.y = 0; // поворот в плоскости ХZ
+        Quaternion playerRotation = Quaternion.LookRotation(lookPos);
+        Vector3 rot = playerRotation.eulerAngles;
         rot.y += Random.Range(-degre, degre);
         CreateBullet(Quaternion.Euler(rot));
         if (ActiveRazbros)

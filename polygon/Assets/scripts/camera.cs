@@ -28,7 +28,7 @@ public class camera : MonoBehaviour
         {
             worldPosition = ray.GetPoint(distance);
         }
-        Debug.Log("Mouseworld" + worldPosition);
+      //  Debug.Log("Mouseworld" + worldPosition);
         Rect rect = new Rect(0,0, Screen.width/ WeighthDel, Screen.height/ HeighDel);
         rect.center = new Vector2(vec.x, vec.z);
         Vector2 pos = new Vector2(worldPosition.x, worldPosition.z);
@@ -39,10 +39,10 @@ public class camera : MonoBehaviour
         Debug.DrawLine(new Vector3(rect.min.x, vec.y, rect.max.y), new Vector3(rect.min.x, vec.y, rect.min.y), Color.green);
         Debug.DrawLine(new Vector3(rect.max.x, vec.y, rect.max.y), new Vector3(rect.min.x, vec.y, rect.max.y), Color.green);
         Debug.DrawLine(new Vector3(rect.max.x, vec.y, rect.max.y), new Vector3(rect.max.x, vec.y, rect.min.y), Color.green);
-        Debug.Log("Mouse2" + worldPosition);
-        Debug.Log("Center"+rect.center);
-        Debug.Log("Max" + rect.max);
-        Debug.Log("Min" + rect.min);
+      //  Debug.Log("Mouse2" + worldPosition);
+   //     Debug.Log("Center"+rect.center);
+   //     Debug.Log("Max" + rect.max);
+   //     Debug.Log("Min" + rect.min);
         vec.x = (vec.x + pos.x) / 2;
         vec.z = (vec.z + pos.y) / 2;
         vec.y += RangeY;

@@ -17,6 +17,7 @@ public class Shoot : MonoBehaviour
     // Update is called once per frame
     void Simulation()
     {
+        Debug.DrawRay(transform.position, transform.forward * 20, Color.green);
         int i = 0;
         RaycastHit[] hit;
         hit = Physics.RaycastAll(transform.position, transform.forward);
@@ -81,6 +82,10 @@ public class Shoot : MonoBehaviour
                 Destroy(CreateBullet.gameObject);
                 Destroy(transform.gameObject);
             }
+        }
+        if (time * speed > distance + (speed / 20))
+        {
+            hits.Add(hit[i].collider);
         }
         }
     void Update()
