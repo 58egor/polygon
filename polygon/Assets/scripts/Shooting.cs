@@ -49,7 +49,9 @@ public class Shooting : MonoBehaviour
     public bool RayBullet;
     [Header("Анимация")]
     private Animator animator;
-
+    public GameObject SpawnObject;
+    public GameObject SpawnPoint;
+    public Vector3 Power;
     // Start is called before the first frame update
     void Start()
     {
@@ -71,7 +73,7 @@ public class Shooting : MonoBehaviour
         // Update is called once per frame
         void Update()
     {
-        Debug.DrawRay(gunpoit.transform.position, transform.parent.forward * Distance, Color.green);
+        //Debug.DrawRay(gunpoit.transform.position, transform.parent.forward * Distance, Color.green);
         if ((Input.GetMouseButton(0) || TripleShoot))
         {
             if (TripleShootActive && TripleShoot)
@@ -274,13 +276,19 @@ public class Shooting : MonoBehaviour
         {
             for(int i = 0; i < bullets;i++)
             {
-                rot = transform.parent.rotation.eulerAngles;
+                lookPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.y)) - transform.position;
+                lookPos.y = 0; // поворот в плоскости ХZ
+                playerRotation = Quaternion.LookRotation(lookPos);
+                rot = playerRotation.eulerAngles;
                 rot.y += razbros * (i + 1)+ Random.Range(-degre, degre);
                 CreateBullet(Quaternion.Euler(rot));
             }
             for (int i = 0; i < bullets; i++)
             {
-                rot = transform.parent.rotation.eulerAngles;
+                lookPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.y)) - transform.position;
+                lookPos.y = 0; // поворот в плоскости ХZ
+                playerRotation = Quaternion.LookRotation(lookPos);
+                rot = playerRotation.eulerAngles;
                 rot.y -= razbros * (i + 1)+ Random.Range(-degre, degre);
                 CreateBullet(Quaternion.Euler(rot));
             }
@@ -305,6 +313,14 @@ public class Shooting : MonoBehaviour
     }
     private void OnEnable()
     {
+        animator = GetComponentInChildren<Animator>();
         animator.Rebind();
+    }
+    public void Spawn()
+    {
+        GameObject obj;
+        obj = Instantiate(SpawnObject, SpawnPoint.transform.position, transform.rotation);
+        Rigidbody body = obj.GetComponent<Rigidbody>();
+        body.AddForce(Power,ForceMode.Force);
     }
 }
