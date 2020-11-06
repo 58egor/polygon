@@ -13,9 +13,14 @@ public class MovingEnemy : MonoBehaviour
     Vector3 lastPos = new Vector3(0,0,0);
     public float speed = 10;
     int ID = 1;
+    public float timeout = 3f;
+    float timer;
     void Start()
     {
-        SpawnObject = Instantiate(Enemy, SpawnPoint.transform.position, SpawnPoint.transform.rotation);
+        timer = timeout;
+        Vector3 pos = SpawnPoint.transform.position;
+        pos.y += Enemy.transform.localScale.y;
+        SpawnObject = Instantiate(Enemy, pos, SpawnPoint.transform.rotation);
         body = SpawnObject.GetComponent<Rigidbody>();
     }
 
@@ -27,7 +32,9 @@ public class MovingEnemy : MonoBehaviour
             if (SpawnObject.transform.position != lastPos)
             {
                 lastPos = SpawnObject.transform.position;
-                SpawnObject.transform.position = Vector3.MoveTowards(SpawnObject.transform.position, MovingsPoints[ID].transform.position, Time.deltaTime*speed);
+                Vector3 pos = MovingsPoints[ID].transform.position;
+                pos.y += Enemy.transform.localScale.y;
+                SpawnObject.transform.position = Vector3.MoveTowards(SpawnObject.transform.position, pos, Time.deltaTime*speed);
             }
             else
             {
@@ -44,7 +51,14 @@ public class MovingEnemy : MonoBehaviour
         }
         else
         {
-            SpawnObject = Instantiate(Enemy, SpawnPoint.transform.position, SpawnPoint.transform.rotation);
+            timer -= Time.deltaTime;
+            if (timeout < 0)
+            {
+                Vector3 pos = SpawnPoint.transform.position;
+                pos.y += Enemy.transform.localScale.y;
+                SpawnObject = Instantiate(Enemy, pos, SpawnPoint.transform.rotation);
+                timer = timeout;
+            }
         }
     }
 }
